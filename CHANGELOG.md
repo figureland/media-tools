@@ -1,4 +1,20 @@
 #
+## v0.0.16
+
+[compare changes](https://github.com/figureland/media-tools/compare/v0.0.15...v0.0.16)
+
+### 🩹 Fixes
+
+- Type mismatch between Buffer and UintArray ([e29e1c4](https://github.com/figureland/media-tools/commit/e29e1c4))
+
+### 🏡 Chore
+
+- Removed stray files ([bcb85f5](https://github.com/figureland/media-tools/commit/bcb85f5))
+
+### ❤️ Contributors
+
+- Toby Milner-Gulland <toby@figure.land>
+
 ## v0.0.15
 
 [compare changes](https://github.com/figureland/media-tools/compare/v0.0.14...v0.0.15)
