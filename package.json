@@ -17,7 +17,7 @@
   "bin": {
     "media-process-video": "./src/cli/process.ts"
   },
-  "description": "Base template for Figure Typescript projects",
+  "description": "Minimal tools for working with video",
   "scripts": {
     "prepare": "husky",
     "lint": "eslint src/",
