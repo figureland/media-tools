@@ -1,4 +1,16 @@
 #
+## v0.0.11
+
+[compare changes](https://github.com/figureland/media-tools/compare/v0.0.10...v0.0.11)
+
+### 🏡 Chore
+
+- Rm old files ([ede9314](https://github.com/figureland/media-tools/commit/ede9314))
+
+### ❤️ Contributors
+
+- Toby Milner-Gulland <toby@figure.land>
+
 ## v0.0.10
 
 [compare changes](https://github.com/figureland/media-tools/compare/v0.0.9...v0.0.10)
