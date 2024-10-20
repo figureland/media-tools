@@ -9,7 +9,9 @@ export const getFilesInDirectory = async (
   if (!extensions || extensions.length === 0) {
     return files
   }
-  return files.filter((file) => extensions.includes(extname(file).toLowerCase()))
+  return files
+    .filter((file) => extensions.includes(extname(file).toLowerCase()))
+    .map((file) => join(directory, file))
 }
 
 export const isDirectory = async (path: string): Promise<boolean> => {

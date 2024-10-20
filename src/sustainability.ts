@@ -1,8 +1,8 @@
 import { co2 } from '@tgwf/co2'
+import { isNumber } from '@figureland/kit/ts/guards'
 import type { VideoManifest } from './schema'
 import type { VideoProcessingSuccessResult } from './video'
 import { print } from './log'
-import { isNumber } from '@figureland/kit/ts/guards'
 
 const swd = new co2({ model: 'swd' })
 const co2e = (bytes: number) => Number(swd.perByte(bytes))
@@ -87,17 +87,15 @@ export const logCO2eReport = (videos: VideoProcessingSuccessResult[]) => {
 
   print.log({
     message: [
-      `Saved ${formatBytes(deltaSize)} of data, or an estimated ${formatCO2e(deltaCO2e)} in emissions`
+      `:) Saved ${formatBytes(deltaSize)} of data, or an estimated ${formatCO2e(deltaCO2e)} in emissions`
     ],
-    color: 'lime green',
-    indent: 0
+    color: 'lime green'
   })
   print.log({
     message: [
-      `For an example website with 1000 visitors per month`,
-      `this could save ${formatCO2e(calculation)}/yr`
+      `You could save ${formatCO2e(calculation)}/yr`,
+      `based on a website with 1000 visitors/month`
     ],
-    color: 'lime green',
-    indent: 0
+    color: 'forest green'
   })
 }

@@ -1,11 +1,11 @@
 import { $ } from 'bun'
-import { mkdir, access } from 'fs/promises'
+import { mkdir } from 'fs/promises'
 import { parse, join, basename, relative } from 'path'
 import type { VideoManifest } from './schema'
 import { generateManifest } from './manifest'
 import { getFileHash } from './hash'
 import { getVideoManifest } from './api'
-import { fileExists, fileSize, getFilesInDirectory, isDirectory } from './fs'
+import { fileExists, fileSize } from './fs'
 import { print } from './log'
 
 export const getVideoFPS = async (inputFile: string) => {
@@ -196,14 +196,12 @@ export const processVideo = async ({
     const endTime = performance.now()
     const elapsedTime = ((endTime - startTime) / 1000).toFixed(2)
 
-    print.log({ message: [`Finished processing ${filename} (${elapsedTime}s)`] })
-    print.log({ message: [`${manifestPath}`], indent: 2 })
+    print.log({ message: [`Optimised ${filename} (${elapsedTime}s)`] })
     for (const source of manifest.sources) {
       const sizeInMB = (source.size / (1024 * 1024)).toFixed(2)
       const percentReduction = ((1 - source.size / metadata.size) * 100).toFixed(0)
       print.log({
-        message: [`${source.type} (${sizeInMB}mb, ${percentReduction}% smaller)`],
-        indent: 4
+        message: [`∟ ${source.type} (${sizeInMB}mb, ${percentReduction}% smaller)`]
       })
     }
     return {
@@ -227,88 +225,35 @@ export const isFFmpegInstalled = async (): Promise<boolean> => {
 }
 
 export const processVideos = async ({
-  input,
+  files,
   outputFolder,
   baseDir = '/',
   loglevel = 'info'
 }: {
-  input: string
+  files: string[]
   outputFolder: string
   baseDir?: string
   loglevel?: FFMpegLogLevel
 }) => {
-  try {
-    await access(input)
-  } catch (error) {
-    print.error({ message: [`Error: The input "${input}" does not exist or is not accessible.`] })
-    process.exit(1)
-  }
-
-  const hasFFmpeg = await isFFmpegInstalled()
-
-  if (!hasFFmpeg) {
-    print.error({ message: ['Error: ffmpeg is not installed.'] })
-    process.exit(1)
-  }
-
-  await mkdir(outputFolder, { recursive: true })
-
   const results: VideoProcessingResult[] = []
 
-  const isDir = await isDirectory(input)
+  print.log({
+    message: [`Processing ${files.length} videos`]
+  })
 
-  if (isDir) {
-    const videoFiles = await getFilesInDirectory(input, ['.mp4', '.mov'])
-
-    if (videoFiles.length === 0) {
-      print.error({
-        message: [
-          `No video files found in "${input}". Please make sure the directory contains .mp4 or .mov files.`
-        ]
-      })
-      process.exit(0)
-    }
-
-    for (const f of videoFiles) {
-      const file = join(input, f)
-      const result = await processVideo({
-        outputFolder,
-        file,
-        baseDir,
-        overwrite: true,
-        loglevel
-      })
-      if (result) {
-        results.push(result)
-      }
-    }
-
-    print.log({ message: ['All videos processed.'] })
-  } else {
-    const singleFileExists = await fileExists(input, basename(input), ['.mp4', '.mov'])
-    if (!singleFileExists) {
-      print.error({
-        message: [`Error: The file "${input}" is not a supported video format (.mp4 or .mov).`]
-      })
-      process.exit(1)
-    }
-
+  for (const file of files) {
     const result = await processVideo({
       outputFolder,
-      file: input,
-      baseDir: '/converted',
+      file,
+      baseDir,
       overwrite: true,
-      loglevel: 'info'
+      loglevel
     })
-
     if (result) {
       results.push(result)
     }
-
-    print.log({
-      message: ['Video processed.']
-    })
   }
+
   return collectResults(results)
 }
 

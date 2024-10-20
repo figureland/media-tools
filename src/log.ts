@@ -4,7 +4,7 @@ type LogOptions = {
   color?: string
 }
 
-export const log = ({ message, indent = 0, color = 'grey' }: LogOptions) => {
+export const log = ({ message, indent = 2, color = 'grey' }: LogOptions) => {
   const indentation = ' '.repeat(indent)
   const colorCode = getColorCode(color)
 
@@ -38,3 +38,11 @@ export const print = {
   error,
   log
 }
+
+export const logo = `
+     \\         |          /
+
+—    F   I   G   U   R   E     —
+
+     /         |          \\
+`
