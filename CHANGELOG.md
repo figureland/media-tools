@@ -1,4 +1,16 @@
 #
+## v0.0.8
+
+[compare changes](https://github.com/figureland/media-tools/compare/v0.0.7...v0.0.8)
+
+### 🚀 Enhancements
+
+- Ux improvements and nicer messages ([7fb360d](https://github.com/figureland/media-tools/commit/7fb360d))
+
+### ❤️ Contributors
+
+- Toby Milner-Gulland <toby@figure.land>
+
 ## v0.0.7
 
 [compare changes](https://github.com/figureland/media-tools/compare/v0.0.6...v0.0.7)
