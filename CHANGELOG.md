@@ -1,4 +1,16 @@
 #
+## v0.0.24
+
+[compare changes](https://github.com/figureland/media-tools/compare/v0.0.23...v0.0.24)
+
+### 🚀 Enhancements
+
+- Improving thumbnail image quality ([c33071c](https://github.com/figureland/media-tools/commit/c33071c))
+
+### ❤️ Contributors
+
+- Toby Milner-Gulland <toby@figure.land>
+
 ## v0.0.23
 
 [compare changes](https://github.com/figureland/media-tools/compare/v0.0.22...v0.0.23)
