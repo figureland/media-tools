@@ -6,7 +6,7 @@ import { parseArgs } from 'util'
 import { logo, print } from '../log'
 import { logCO2eReport } from '../sustainability'
 import { access, mkdir } from 'fs/promises'
-import { basename, resolve } from 'path'
+import { basename } from 'path'
 import { fileExists, getFilesInDirectory, isDirectory } from '../fs'
 import { isFFmpegInstalled } from '../video/ffmpeg'
 
