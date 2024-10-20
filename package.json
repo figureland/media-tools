@@ -1,38 +1,38 @@
 {
-  "name": "@figureland/base",
+  "name": "@figureland/media-tools",
   "version": "0.0.0",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
   "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "require": "./dist/index.js",
-      "import": "./dist/index.js"
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
     },
-    "./entry": {
-      "types": "./dist/entry.d.ts",
-      "require": "./dist/entry.js",
-      "import": "./dist/entry.js"
+    "./astro": {
+      "types": "./src/astro/index.ts",
+      "import": "./src/astro/index.ts"
     }
+  },
+  "bin": {
+    "media/process-video": "./src/cli/video.ts"
   },
   "description": "Base template for Figure Typescript projects",
   "scripts": {
-    "build": "bun run scripts/build.ts",
-    "dev": "bun --watch scripts/dev.ts",
     "prepare": "husky",
     "lint": "eslint src/",
     "format": "prettier --write src/",
-    "release": "bunx changelogen@latest --release"
+    "release": "bunx changelogen@latest --release",
+    "process-media": "media-tools/process"
   },
   "files": [
-    "dist"
+    "src"
   ],
   "license": "MIT",
   "devDependencies": {
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
-    "@types/bun": "^1.1.6",
+    "@types/bun": "^1.1.11",
     "bun-plugin-dts": "^0.2.3",
     "eslint": "^9.8.0",
     "husky": "^9.1.3",
@@ -42,11 +42,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/figureland/base.git"
+    "url": "git+https://github.com/figureland/media-tools.git"
   },
   "author": "Figure Systems",
   "bugs": {
-    "url": "https://github.com/figureland/base"
+    "url": "https://github.com/figureland/media-tools"
   },
-  "homepage": "https://github.com/figureland/base#readme"
+  "homepage": "https://github.com/figureland/media-tools#readme",
+  "dependencies": {
+    "zod": "^3.23.8"
+  }
 }

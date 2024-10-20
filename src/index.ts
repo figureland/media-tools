@@ -1,2 +1,3 @@
-export const example = () => 'hello'
-export const other = () => 'wrong'
+export { videoManifestSchema, isVideoManifest } from './schema'
+export type { VideoManifest } from './schema'
+export { getVideoManifest } from './api'
