@@ -86,14 +86,12 @@ export const logCO2eReport = (videos: VideoProcessingSuccessResult[]) => {
   const calculation = 12 * 1000 * deltaCO2e
 
   print.log({
-    message: [
-      `:) Saved ${formatBytes(deltaSize)} of data, or an estimated ${formatCO2e(deltaCO2e)} in emissions`
-    ],
+    message: [`:) Saved ${formatBytes(deltaSize)}`, `Estimated ${formatCO2e(deltaCO2e)}`],
     color: 'lime green'
   })
   print.log({
     message: [
-      `You could save ${formatCO2e(calculation)}/yr`,
+      `This could save ${formatCO2e(calculation)}/yr`,
       `based on a website with 1000 visitors/month`
     ],
     color: 'forest green'

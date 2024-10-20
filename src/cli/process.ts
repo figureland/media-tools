@@ -81,8 +81,6 @@ const main = async () => {
       print.log({
         message: videos.success.filter(isSuccessfulResult).map((video) => `∟ ${video.manifest?.id}`)
       })
-
-      logCO2eReport(videos.success)
     }
     if (videos.unchanged.length > 0) {
       print.log({
@@ -95,6 +93,9 @@ const main = async () => {
         message: [`> ${videos.errors.length} videos failed to process`],
         color: 'orange'
       })
+    }
+    if (videos.success.length > 0) {
+      logCO2eReport(videos.success)
     }
   } catch (error) {
     print.error({
