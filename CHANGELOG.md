@@ -1,4 +1,16 @@
 #
+## v0.0.13
+
+[compare changes](https://github.com/figureland/media-tools/compare/v0.0.12...v0.0.13)
+
+### 🚀 Enhancements
+
+- Added sustainability tracking ([cf5ed36](https://github.com/figureland/media-tools/commit/cf5ed36))
+
+### ❤️ Contributors
+
+- Toby Milner-Gulland <toby@figure.land>
+
 ## v0.0.12
 
 [compare changes](https://github.com/figureland/media-tools/compare/v0.0.11...v0.0.12)
