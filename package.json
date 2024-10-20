@@ -15,7 +15,7 @@
     }
   },
   "bin": {
-    "media-process-video": "./src/cli/video.ts"
+    "media-process-video": "./src/cli/process.ts"
   },
   "description": "Base template for Figure Typescript projects",
   "scripts": {
