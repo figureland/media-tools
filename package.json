@@ -22,7 +22,8 @@
     "prepare": "husky",
     "lint": "eslint src/",
     "format": "prettier --write src/",
-    "release": "bunx changelogen@latest --release"
+    "release": "bunx changelogen@latest --release",
+    "test:process": "bun run src/cli/process.ts --src video --output output"
   },
   "files": [
     "src"

@@ -10,7 +10,7 @@ export const getVideoManifest = async (
   folder: string,
   id: string
 ): Promise<VideoManifest | null> => {
-  const manifestPath = join(folder, `${id}_manifest.json`)
+  const manifestPath = join(folder, `${id}.manifest.json`)
 
   try {
     await access(manifestPath)
@@ -27,7 +27,7 @@ export const getVideoManifest = async (
     if (error instanceof ZodError) {
       console.error('Invalid manifest data:', error.errors)
     } else {
-      console.error('Could not find or parse manifest file:', `${id}_manifest.json`)
+      console.error('Could not find or parse manifest file:', `${id}.manifest.json`)
     }
     return null
   }

@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 
-import { processVideos } from '../video'
+import { isSuccessfulResult, processVideos } from '../video'
 import { name } from '../../package.json'
 import { parseArgs } from 'util'
 
@@ -12,18 +12,23 @@ const { values } = parseArgs({
   allowPositionals: true
 })
 
-if (!values.src) {
+if (!values.src || !values.output) {
   console.error(`Usage: ${name} --src <input_directory> [--output <output_directory>]`)
   process.exit(1)
 }
 
 const input = values.src
-const outputFolder = values.output || input
+const outputFolder = values.output
 
-processVideos({ input, outputFolder })
+processVideos({ input, outputFolder, loglevel: 'quiet' })
   .then((videos) => {
     if (videos.success.length > 0) {
       console.log(`> Generated ${videos.success.length} videos`)
+      videos.success.forEach((video) => {
+        if (isSuccessfulResult(video)) {
+          console.log(`  > ${video.manifest?.id}`)
+        }
+      })
     }
     if (videos.unchanged.length > 0) {
       console.log(`> ${videos.unchanged.length} videos were unchanged`)

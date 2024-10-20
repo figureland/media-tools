@@ -1,6 +1,6 @@
 import { $ } from 'bun'
 import { mkdir, stat, access } from 'fs/promises'
-import { parse, join, basename, relative, extname } from 'path'
+import { parse, join, basename, relative } from 'path'
 import type { VideoManifest } from './schema'
 import { generateManifest } from './manifest'
 import { getFileHash } from './hash'
@@ -63,8 +63,8 @@ export const generateVideo = async ({
 }) => {
   const overwriteFlag = overwrite ? '-y' : ''
 
-  const h264 = `${filename}_h264.mp4`
-  const vp9 = `${filename}_vp9.webm`
+  const h264 = `${filename}.mp4`
+  const vp9 = `${filename}.webm`
 
   await $`ffmpeg ${overwriteFlag} -loglevel ${loglevel} -i ${inputFile} \
     -c:v libx264 -crf 23 -preset medium -vf "scale=-2:720" -c:a aac -b:a 128k ${outputFolder}/${h264} \
@@ -107,7 +107,7 @@ export const processVideo = async ({
   try {
     const { name: inputFileBase, dir: inputFileDir } = parse(file)
 
-    const inputFile = await fileExists(inputFileDir, inputFileBase, ['mp4', 'mov'])
+    const inputFile = await fileExists(inputFileDir, inputFileBase, ['.mp4', '.mov'])
 
     if (!inputFile) {
       throw new Error(`No .mp4 or .mov file found for ${inputFileBase}`)
@@ -124,7 +124,7 @@ export const processVideo = async ({
 
     const { hash, shortHash } = await getFileHash(inputFile)
 
-    const manifestPath = join(targetDir, `${id}_manifest.json`)
+    const manifestPath = join(targetDir, `${id}.manifest.json`)
 
     const existingManifest = await getVideoManifest(targetDir, id)
 
@@ -140,7 +140,7 @@ export const processVideo = async ({
     const sources = await generateVideo({
       inputFile,
       outputFolder,
-      filename: `${id}_${shortHash}`,
+      filename: `${id}.${shortHash}`,
       overwrite,
       loglevel
     })
@@ -148,7 +148,7 @@ export const processVideo = async ({
     const posterPath = await generatePosterImage({
       inputFile,
       outputFolder,
-      filename: `${id}_${shortHash}_poster`,
+      filename: `${id}_poster.${shortHash}`,
       loglevel
     })
 
@@ -173,7 +173,6 @@ export const processVideo = async ({
       manifest
     }
   } catch (error) {
-    console.error(error)
     return {
       status: 'error'
     }
@@ -191,10 +190,12 @@ export const isFFmpegInstalled = async (): Promise<boolean> => {
 
 export const processVideos = async ({
   input,
-  outputFolder
+  outputFolder,
+  loglevel = 'info'
 }: {
   input: string
   outputFolder: string
+  loglevel?: FFMpegLogLevel
 }) => {
   try {
     await access(input)
@@ -217,7 +218,7 @@ export const processVideos = async ({
   const isDir = await isDirectory(input)
 
   if (isDir) {
-    const videoFiles = await getFilesInDirectory(input, ['mp4', 'mov'])
+    const videoFiles = await getFilesInDirectory(input, ['.mp4', '.mov'])
 
     if (videoFiles.length === 0) {
       console.log(
@@ -233,7 +234,7 @@ export const processVideos = async ({
         file,
         baseDir: '/converted/',
         overwrite: true,
-        loglevel: 'info'
+        loglevel
       })
       if (result) {
         results.push(result)
@@ -242,7 +243,7 @@ export const processVideos = async ({
 
     console.log('All videos processed.')
   } else {
-    const singleFileExists = await fileExists(input, basename(input), ['mp4', 'mov'])
+    const singleFileExists = await fileExists(input, basename(input), ['.mp4', '.mov'])
     if (!singleFileExists) {
       console.error(`Error: The file "${input}" is not a supported video format (.mp4 or .mov).`)
       process.exit(1)
@@ -276,3 +277,8 @@ export const collectResults = (results: VideoProcessingResult[]) => {
     errors
   }
 }
+
+export const isSuccessfulResult = (
+  result: VideoProcessingResult
+): result is { status: 'success' | 'unchanged'; manifest: VideoManifest } =>
+  result.status === 'success' || result.status === 'unchanged'

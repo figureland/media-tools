@@ -23,7 +23,7 @@ export const fileExists = async (
   extensions: string[]
 ): Promise<string | null> => {
   for (const ext of extensions) {
-    const filePath = join(folder, `${name}.${ext}`)
+    const filePath = join(folder, `${name}${ext}`)
     try {
       await access(filePath)
       return filePath
