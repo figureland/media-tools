@@ -15,10 +15,11 @@
     }
   },
   "bin": {
-    "media-process-video": "./src/cli/process.ts"
+    "media-process-video": "./dist/process.js"
   },
   "description": "Minimal tools for working with video",
   "scripts": {
+    "build": "bun run scripts/build.ts",
     "prepare": "husky",
     "lint": "eslint src/",
     "format": "prettier --write src/",
@@ -30,15 +31,15 @@
   ],
   "license": "MIT",
   "devDependencies": {
-    "@commitlint/cli": "^19.3.0",
-    "@commitlint/config-conventional": "^19.2.2",
+    "@commitlint/cli": "^19.5.0",
+    "@commitlint/config-conventional": "^19.5.0",
     "@types/bun": "^1.1.11",
-    "bun-plugin-dts": "^0.2.3",
-    "eslint": "^9.8.0",
-    "husky": "^9.1.3",
+    "bun-plugin-dts": "^0.2.4",
+    "eslint": "^9.13.0",
+    "husky": "^9.1.6",
     "prettier": "^3.3.3",
-    "typescript": "^5.5.4",
-    "typescript-eslint": "^7.17.0"
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^7.18.0"
   },
   "repository": {
     "type": "git",
