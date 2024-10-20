@@ -15,7 +15,7 @@
     }
   },
   "bin": {
-    "media-process-video": "./dist/process.js"
+    "media-process-video": "./cli/process.js"
   },
   "description": "Minimal tools for working with video",
   "scripts": {
@@ -27,6 +27,7 @@
     "test:process": "bun run src/cli/process.ts --src video --output output"
   },
   "files": [
+    "cli",
     "src"
   ],
   "license": "MIT",
