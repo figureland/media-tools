@@ -1,4 +1,21 @@
 #
+## v0.0.12
+
+[compare changes](https://github.com/figureland/media-tools/compare/v0.0.11...v0.0.12)
+
+### 📖 Documentation
+
+- Update description ([04894c5](https://github.com/figureland/media-tools/commit/04894c5))
+
+### 🏡 Chore
+
+- Bumped dependencies and added build script for cli ([d908702](https://github.com/figureland/media-tools/commit/d908702))
+- Updated build output folder ([2d4fade](https://github.com/figureland/media-tools/commit/2d4fade))
+
+### ❤️ Contributors
+
+- Toby Milner-Gulland <toby@figure.land>
+
 ## v0.0.11
 
 [compare changes](https://github.com/figureland/media-tools/compare/v0.0.10...v0.0.11)
