@@ -1,4 +1,16 @@
 #
+## v0.0.10
+
+[compare changes](https://github.com/figureland/media-tools/compare/v0.0.9...v0.0.10)
+
+### 🚀 Enhancements
+
+- More useful console messages ([e3636ea](https://github.com/figureland/media-tools/commit/e3636ea))
+
+### ❤️ Contributors
+
+- Toby Milner-Gulland <toby@figure.land>
+
 ## v0.0.9
 
 [compare changes](https://github.com/figureland/media-tools/compare/v0.0.8...v0.0.9)
