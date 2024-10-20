@@ -2,27 +2,26 @@ import { co2 } from '@tgwf/co2'
 import type { VideoManifest } from './schema'
 import type { VideoProcessingSuccessResult } from './video'
 import { print } from './log'
+import { isNumber } from '@figureland/kit/ts/guards'
 
-export const getCO2eReport = (manifest: VideoManifest) => {
-  const swd = new co2({ model: 'swd' })
+const swd = new co2({ model: 'swd' })
+const co2e = (bytes: number) => Number(swd.perByte(bytes))
 
-  let totalSize = 0
+export const getVideoCO2eReport = (manifest: VideoManifest) => {
+  // Average size per optimised video
+  const averageOptimisedSize = average(manifest.sources, 'size')
 
-  for (const source of manifest.sources) {
-    totalSize += source.size
-  }
+  // Total original CO2e for the video
+  const originalCO2e = co2e(manifest.size)
 
-  const averageSize = totalSize / manifest.sources.length
+  // Average CO2e for optimised video
+  const averageOptimisedCO2e = co2e(averageOptimisedSize)
 
-  const originalSize = manifest.size
-  const originalCO2e = Number(swd.perByte(manifest.size))
-  const averageOptimisedCO2e = Number(swd.perByte(averageSize))
-  const averageOptimisedSize = totalSize / manifest.sources.length
-
+  // Total CO2e saved per video
   const deltaCO2e = originalCO2e - averageOptimisedCO2e
 
   return {
-    originalSize,
+    originalSize: manifest.size,
     originalCO2e,
     averageOptimisedCO2e,
     averageOptimisedSize,
@@ -30,28 +29,30 @@ export const getCO2eReport = (manifest: VideoManifest) => {
   }
 }
 
-const acc = <O extends Record<string, number>>(arr: O[], key: keyof O) =>
-  arr.reduce((acc, curr) => acc + curr[key], 0)
+export const total = <O extends Record<string, unknown>>(arr: O[], key: keyof O) =>
+  arr.reduce((acc, curr) => acc + (isNumber(curr[key]) ? curr[key] : 0), 0)
 
-const average = <O extends Record<string, number>>(arr: O[], key: keyof O) =>
-  acc(arr, key) / arr.length
+export const average = <O extends Record<string, unknown>>(arr: O[], key: keyof O) =>
+  total(arr, key) / arr.length
 
 export const createCO2eReport = (videos: { status: 'success'; manifest: VideoManifest }[]) => {
-  const reports = videos.map(({ manifest }) => getCO2eReport(manifest))
+  const reports = videos.map(({ manifest }) => getVideoCO2eReport(manifest))
 
-  const originalCO2e = average(reports, 'originalCO2e')
-  const optimisedCO2e = average(reports, 'deltaCO2e')
-  const originalSize = average(reports, 'originalSize')
-  const optimisedSize = average(reports, 'averageOptimisedSize')
+  // Total original file size across all media
+  const originalSize = total(reports, 'originalSize')
 
+  // Total optimised file size across all media
+  const optimisedSize = total(reports, 'averageOptimisedSize')
+
+  // Total bytes saved across all media
   const deltaSize = originalSize - optimisedSize
-  const deltaCO2e = originalCO2e - optimisedCO2e
+
+  // Total CO2e saved across all media
+  const deltaCO2e = co2e(deltaSize)
 
   return {
     reports,
     originalSize,
-    originalCO2e,
-    optimisedCO2e,
     optimisedSize,
     deltaSize,
     deltaCO2e
@@ -82,6 +83,8 @@ export const formatCO2e = (co2e: number) => {
 
 export const logCO2eReport = (videos: VideoProcessingSuccessResult[]) => {
   const { deltaSize, deltaCO2e } = createCO2eReport(videos)
+  const calculation = 12 * 1000 * deltaCO2e
+
   print.log({
     message: [
       `Saved ${formatBytes(deltaSize)} of data, or an estimated ${formatCO2e(deltaCO2e)} in emissions`
@@ -92,7 +95,7 @@ export const logCO2eReport = (videos: VideoProcessingSuccessResult[]) => {
   print.log({
     message: [
       `For an example website with 1000 visitors per month`,
-      `this could save ${formatCO2e(12 * 1000 * deltaCO2e)}/yr`
+      `this could save ${formatCO2e(calculation)}/yr`
     ],
     color: 'lime green',
     indent: 0
