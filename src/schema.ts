@@ -9,6 +9,12 @@ export const videoManifestSchema = z.object({
       size: z.number()
     })
   ),
+  thumbnails: z.object({
+    src: z.string(),
+    intervals: z.number(),
+    width: z.number(),
+    height: z.number()
+  }),
   poster: z.string(),
   width: z.number(),
   height: z.number(),

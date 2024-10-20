@@ -1,7 +1,7 @@
 import { co2 } from '@tgwf/co2'
 import { isNumber } from '@figureland/kit/ts/guards'
 import type { VideoManifest } from './schema'
-import type { VideoProcessingSuccessResult } from './video'
+import type { VideoProcessingSuccessResult } from './types'
 import { print } from './log'
 
 const swd = new co2({ model: 'swd' })
@@ -95,8 +95,8 @@ export const logCO2eReport = (videos: VideoProcessingSuccessResult[]) => {
   })
   print.log({
     message: [
-      `You're saving ${formatCO2e(calculation)}/yr`,
-      `based on a website with 1000 visitors/month`
+      `You could save ${formatCO2e(calculation)}/yr`,
+      `based on a website with 1000 new visitors/month`
     ],
     color: 'forest green'
   })

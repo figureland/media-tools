@@ -40,9 +40,9 @@ export const print = {
 }
 
 export const logo = `
-     \\         |          /
+-   -   -   -   -   -
 
-—    F   I   G   U   R   E     —
+F   I   G   U   R   E
 
-     /         |          \\
+-   -   -   -   -   -
 `

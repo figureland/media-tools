@@ -1,13 +1,14 @@
 #!/usr/bin/env bun
 
-import { isFFmpegInstalled, isSuccessfulResult, processVideos } from '../video'
+import { isSuccessfulResult, processVideos } from '../video/generate'
 import { name } from '../../package.json'
 import { parseArgs } from 'util'
 import { logo, print } from '../log'
 import { logCO2eReport } from '../sustainability'
 import { access, mkdir } from 'fs/promises'
-import { basename } from 'path'
+import { basename, resolve } from 'path'
 import { fileExists, getFilesInDirectory, isDirectory } from '../fs'
+import { isFFmpegInstalled } from '../video/ffmpeg'
 
 const { values } = parseArgs({
   options: {
@@ -29,9 +30,10 @@ if (!values.src || !values.output) {
 
 const input = values.src
 const outputFolder = values.output
-const baseDir = values.baseDir
+const baseDir = values.baseDir || values.output
 
 const FILE_TYPES = ['.mp4', '.mov']
+
 const main = async () => {
   try {
     print.log({
@@ -73,6 +75,7 @@ const main = async () => {
       baseDir,
       loglevel: 'quiet'
     })
+
     if (videos.success.length > 0) {
       print.log({
         message: [`> ${videos.success.length} videos optimised`],

@@ -11,7 +11,7 @@ This library is still quite complicated, so there is still a way to go to make i
 
 ## Getting started
 
-This project depends on [bun](https://bun.sh/) and [ffmpeg](https://www.ffmpeg.org/). It's intended for local use, not for CI or servers although that may change with a more mature version in the future.
+This project depends on [bun](https://bun.sh/), [ffmpeg](https://www.ffmpeg.org/) and [sharp](https://sharp.pixelplumbing.com/). It's intended for local use, not for CI or servers although that may change with a more mature version in the future.
 
 ### 1. Install the dependency
 
