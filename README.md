@@ -39,7 +39,7 @@ const manifest = await getVideoManifest('public', 'my-movie')
 
 ### 4. Usage in astro
 
-The library provides an Astro collection Zod schema which transforms a file path `string` into a `VideoManifest` if the API can find it. This works similarly to how Astro's built-in `image()` helper works.
+The library provides an Astro collection Zod schema which transforms the `string` ID into a `VideoManifest` if the API can find it. This works similarly to how Astro's built-in `image()` helper works.
 
 ```ts
 import { video } from '@figureland/media-tools/astro'

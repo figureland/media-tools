@@ -75,7 +75,7 @@ const main = async () => {
     })
     if (videos.success.length > 0) {
       print.log({
-        message: [`Processed ${videos.success.length} videos`],
+        message: [`> ${videos.success.length} videos optimised`],
         color: 'lime green'
       })
       print.log({
@@ -84,7 +84,7 @@ const main = async () => {
     }
     if (videos.unchanged.length > 0) {
       print.log({
-        message: [`> ${videos.unchanged.length} videos were unchanged`],
+        message: [`> ${videos.unchanged.length} existing videos unchanged`],
         color: 'orange'
       })
     }
