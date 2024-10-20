@@ -164,3 +164,12 @@ export const processVideo = async ({
 
   return manifest
 }
+
+export const isFFmpegInstalled = async (): Promise<boolean> => {
+  try {
+    await $`ffmpeg -version`.quiet()
+    return true
+  } catch (error) {
+    return false
+  }
+}

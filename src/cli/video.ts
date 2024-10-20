@@ -2,7 +2,7 @@
 
 import { readdir, mkdir, access, stat } from 'fs/promises'
 import { join, extname } from 'path'
-import { processVideo } from '../ffmpeg'
+import { isFFmpegInstalled, processVideo } from '../ffmpeg'
 import { name } from '../../package.json'
 
 const main = async (input: string, outputFolder: string) => {
@@ -10,6 +10,13 @@ const main = async (input: string, outputFolder: string) => {
     await access(input)
   } catch (error) {
     console.error(`Error: The input "${input}" does not exist or is not accessible.`)
+    process.exit(1)
+  }
+
+  const hasFFmpeg = await isFFmpegInstalled()
+
+  if (!hasFFmpeg) {
+    console.error('Error: ffmpeg is not installed.')
     process.exit(1)
   }
 
