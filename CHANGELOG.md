@@ -1,4 +1,16 @@
 #
+## v0.0.15
+
+[compare changes](https://github.com/figureland/media-tools/compare/v0.0.14...v0.0.15)
+
+### 🩹 Fixes
+
+- Fixed broken release action ([f12eef6](https://github.com/figureland/media-tools/commit/f12eef6))
+
+### ❤️ Contributors
+
+- Toby Milner-Gulland <toby@figure.land>
+
 ## v0.0.14
 
 [compare changes](https://github.com/figureland/media-tools/compare/v0.0.13...v0.0.14)
