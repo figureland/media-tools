@@ -1,4 +1,16 @@
 #
+## v0.0.17
+
+[compare changes](https://github.com/figureland/media-tools/compare/v0.0.16...v0.0.17)
+
+### 🩹 Fixes
+
+- Updated CO2e math ([b6ed9b7](https://github.com/figureland/media-tools/commit/b6ed9b7))
+
+### ❤️ Contributors
+
+- Toby Milner-Gulland <toby@figure.land>
+
 ## v0.0.16
 
 [compare changes](https://github.com/figureland/media-tools/compare/v0.0.15...v0.0.16)
