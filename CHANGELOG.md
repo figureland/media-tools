@@ -1,4 +1,16 @@
 #
+## v0.0.5
+
+[compare changes](https://github.com/figureland/media-tools/compare/v0.0.4...v0.0.5)
+
+### 🚀 Enhancements
+
+- Refinements and ux improvements ([acd2132](https://github.com/figureland/media-tools/commit/acd2132))
+
+### ❤️ Contributors
+
+- Toby Milner-Gulland <toby@figure.land>
+
 ## v0.0.4
 
 [compare changes](https://github.com/figureland/media-tools/compare/v0.0.3...v0.0.4)
