@@ -1,4 +1,16 @@
 #
+## v0.0.18
+
+[compare changes](https://github.com/figureland/media-tools/compare/v0.0.17...v0.0.18)
+
+### 🚀 Enhancements
+
+- Refactored cli script and made CLI colors nicer ([4cdead1](https://github.com/figureland/media-tools/commit/4cdead1))
+
+### ❤️ Contributors
+
+- Toby Milner-Gulland <toby@figure.land>
+
 ## v0.0.17
 
 [compare changes](https://github.com/figureland/media-tools/compare/v0.0.16...v0.0.17)
