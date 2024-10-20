@@ -1,4 +1,17 @@
 #
+## v0.0.14
+
+[compare changes](https://github.com/figureland/media-tools/compare/v0.0.13...v0.0.14)
+
+### 🏡 Chore
+
+- Update release.yml ([beb6c68](https://github.com/figureland/media-tools/commit/beb6c68))
+- Updated dependencies ([8a6fb88](https://github.com/figureland/media-tools/commit/8a6fb88))
+
+### ❤️ Contributors
+
+- Toby Milner-Gulland <toby@figure.land>
+
 ## v0.0.13
 
 [compare changes](https://github.com/figureland/media-tools/compare/v0.0.12...v0.0.13)
