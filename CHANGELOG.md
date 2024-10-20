@@ -1,4 +1,16 @@
 #
+## v0.0.9
+
+[compare changes](https://github.com/figureland/media-tools/compare/v0.0.8...v0.0.9)
+
+### 🩹 Fixes
+
+- Output manifest path name ([d47c5ee](https://github.com/figureland/media-tools/commit/d47c5ee))
+
+### ❤️ Contributors
+
+- Toby Milner-Gulland <toby@figure.land>
+
 ## v0.0.8
 
 [compare changes](https://github.com/figureland/media-tools/compare/v0.0.7...v0.0.8)
