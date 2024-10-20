@@ -24,7 +24,7 @@ bun add @figureland/media-tools
 You can now run the media tools CLI to ingest videos and output optimised versions. `--src` is the source folder for one or more videos. `--output` is the target folder where you want your optimised videos to live.
 
 ```json
-"process-video": "media/process-video --src videos --output public"
+"process-video": "media-process-video --src videos --output public"
 ```
 
 For each video, it will be optimised and output into two versions (`.webm` and `.mp4`) alongside a poster thumbnail, and a `.json` manifest file. The manifest bundles links to the generated video assets.

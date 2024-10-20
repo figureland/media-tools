@@ -15,15 +15,14 @@
     }
   },
   "bin": {
-    "media/process-video": "./src/cli/video.ts"
+    "media-process-video": "./src/cli/video.ts"
   },
   "description": "Base template for Figure Typescript projects",
   "scripts": {
     "prepare": "husky",
     "lint": "eslint src/",
     "format": "prettier --write src/",
-    "release": "bunx changelogen@latest --release",
-    "process-media": "media-tools/process"
+    "release": "bunx changelogen@latest --release"
   },
   "files": [
     "src"
