@@ -1,4 +1,16 @@
 #
+## v0.0.19
+
+[compare changes](https://github.com/figureland/media-tools/compare/v0.0.18...v0.0.19)
+
+### 🏡 Chore
+
+- Tweaked sustainability message ([918d56a](https://github.com/figureland/media-tools/commit/918d56a))
+
+### ❤️ Contributors
+
+- Toby Milner-Gulland <toby@figure.land>
+
 ## v0.0.18
 
 [compare changes](https://github.com/figureland/media-tools/compare/v0.0.17...v0.0.18)
