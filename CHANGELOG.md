@@ -1,4 +1,16 @@
 #
+## v0.0.6
+
+[compare changes](https://github.com/figureland/media-tools/compare/v0.0.5...v0.0.6)
+
+### 🏡 Chore
+
+- Fixed error bugs ([e6e87e9](https://github.com/figureland/media-tools/commit/e6e87e9))
+
+### ❤️ Contributors
+
+- Toby Milner-Gulland <toby@figure.land>
+
 ## v0.0.5
 
 [compare changes](https://github.com/figureland/media-tools/compare/v0.0.4...v0.0.5)
