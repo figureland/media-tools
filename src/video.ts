@@ -6,21 +6,34 @@ import { generateManifest } from './manifest'
 import { getFileHash } from './hash'
 import { getVideoManifest } from './api'
 import { fileExists, fileSize, getFilesInDirectory, isDirectory } from './fs'
+import { print } from './log'
 
-export const getVideoMetadata = async (inputFile: string) => {
+export const getVideoFPS = async (inputFile: string) => {
+  const fps =
+    await $`ffprobe -v error -select_streams v:0 -show_entries stream=r_frame_rate -of csv=p=0 ${inputFile}`.text()
+  const parsedFPS = fps.split('/').map(Number)
+  return parsedFPS[0] / parsedFPS[1]
+}
+
+export const getVideoMetadata = async (
+  inputFile: string
+): Promise<Pick<VideoManifest, 'width' | 'height' | 'duration' | 'size' | 'fps'>> => {
   const width =
     await $`ffprobe -v error -select_streams v:0 -show_entries stream=width -of csv=p=0 ${inputFile}`.text()
   const height =
     await $`ffprobe -v error -select_streams v:0 -show_entries stream=height -of csv=p=0 ${inputFile}`.text()
   const duration =
     await $`ffprobe -v error -show_entries format=duration -of csv=p=0 ${inputFile}`.text()
+
   const size = await fileSize(inputFile)
 
+  const fps = await getVideoFPS(inputFile)
   return {
     width: parseInt(width),
     height: parseInt(height),
     duration: parseFloat(duration),
-    size: size
+    fps,
+    size
   }
 }
 
@@ -60,7 +73,7 @@ export const generateVideo = async ({
   filename: string
   overwrite?: boolean
   loglevel?: FFMpegLogLevel
-}) => {
+}): Promise<VideoManifest['sources']> => {
   const overwriteFlag = overwrite ? '-y' : ''
 
   const h264 = `${filename}.mp4`
@@ -70,26 +83,41 @@ export const generateVideo = async ({
     -c:v libx264 -crf 23 -preset medium -vf "scale=-2:720" -c:a aac -b:a 128k ${outputFolder}/${h264} \
     -c:v libvpx-vp9 -crf 30 -b:v 0 -b:a 128k -vf "scale=-2:720" ${outputFolder}/${vp9}`
 
+  const mp4Size = await fileSize(`${outputFolder}/${h264}`)
+  const vp9Size = await fileSize(`${outputFolder}/${vp9}`)
+
   return [
     {
-      filename: h264,
-      type: 'video/mp4'
+      src: h264,
+      type: 'video/mp4',
+      size: mp4Size
     },
     {
-      filename: vp9,
-      type: 'video/webm'
+      src: vp9,
+      type: 'video/webm',
+      size: vp9Size
     }
   ]
 }
 
-type VideoProcessingResult =
-  | {
-      status: 'unchanged' | 'success'
-      manifest: VideoManifest
-    }
-  | {
-      status: 'error'
-    }
+export type VideoProcessingUnchangedResult = {
+  status: 'unchanged'
+  manifest: VideoManifest
+}
+
+export type VideoProcessingSuccessResult = {
+  status: 'success'
+  manifest: VideoManifest
+}
+
+export type VideoProcessingErrorResult = {
+  status: 'error'
+}
+
+export type VideoProcessingResult =
+  | VideoProcessingUnchangedResult
+  | VideoProcessingSuccessResult
+  | VideoProcessingErrorResult
 
 export const processVideo = async ({
   outputFolder,
@@ -136,7 +164,7 @@ export const processVideo = async ({
       }
     }
 
-    console.log(`Processing ${filename}...`)
+    print.log({ message: [`Processing ${filename}...`], color: 'white' })
 
     const sources = await generateVideo({
       inputFile,
@@ -158,9 +186,9 @@ export const processVideo = async ({
     const manifest = await generateManifest(manifestPath, {
       id,
       hash,
-      sources: sources.map(({ filename, type }) => ({
-        src: `${baseDir}/${filename}`,
-        type
+      sources: sources.map(({ src, ...rest }) => ({
+        src: `${baseDir}/${src}`,
+        ...rest
       })),
       poster: `/${relative('public', posterPath)}`,
       ...metadata
@@ -168,14 +196,15 @@ export const processVideo = async ({
     const endTime = performance.now()
     const elapsedTime = ((endTime - startTime) / 1000).toFixed(2)
 
-    console.log(`Finished processing ${filename} (${elapsedTime}s)`)
-    console.log(`  > ${manifestPath}`)
+    print.log({ message: [`Finished processing ${filename} (${elapsedTime}s)`] })
+    print.log({ message: [`${manifestPath}`], indent: 2 })
     for (const source of manifest.sources) {
-      const filePath = join(targetDir, basename(source.src))
-      const size = await fileSize(filePath)
-      const sizeInMB = (size / (1024 * 1024)).toFixed(2)
-      const percentReduction = ((1 - size / metadata.size) * 100).toFixed(0)
-      console.log(`    > ${source.type} (${sizeInMB}mb, ${percentReduction}% smaller)`)
+      const sizeInMB = (source.size / (1024 * 1024)).toFixed(2)
+      const percentReduction = ((1 - source.size / metadata.size) * 100).toFixed(0)
+      print.log({
+        message: [`${source.type} (${sizeInMB}mb, ${percentReduction}% smaller)`],
+        indent: 4
+      })
     }
     return {
       status: 'success',
@@ -211,14 +240,14 @@ export const processVideos = async ({
   try {
     await access(input)
   } catch (error) {
-    console.error(`Error: The input "${input}" does not exist or is not accessible.`)
+    print.error({ message: [`Error: The input "${input}" does not exist or is not accessible.`] })
     process.exit(1)
   }
 
   const hasFFmpeg = await isFFmpegInstalled()
 
   if (!hasFFmpeg) {
-    console.error('Error: ffmpeg is not installed.')
+    print.error({ message: ['Error: ffmpeg is not installed.'] })
     process.exit(1)
   }
 
@@ -232,9 +261,11 @@ export const processVideos = async ({
     const videoFiles = await getFilesInDirectory(input, ['.mp4', '.mov'])
 
     if (videoFiles.length === 0) {
-      console.log(
-        `No video files found in "${input}". Please make sure the directory contains .mp4 or .mov files.`
-      )
+      print.error({
+        message: [
+          `No video files found in "${input}". Please make sure the directory contains .mp4 or .mov files.`
+        ]
+      })
       process.exit(0)
     }
 
@@ -252,11 +283,13 @@ export const processVideos = async ({
       }
     }
 
-    console.log('All videos processed.')
+    print.log({ message: ['All videos processed.'] })
   } else {
     const singleFileExists = await fileExists(input, basename(input), ['.mp4', '.mov'])
     if (!singleFileExists) {
-      console.error(`Error: The file "${input}" is not a supported video format (.mp4 or .mov).`)
+      print.error({
+        message: [`Error: The file "${input}" is not a supported video format (.mp4 or .mov).`]
+      })
       process.exit(1)
     }
 
@@ -272,14 +305,26 @@ export const processVideos = async ({
       results.push(result)
     }
 
-    console.log('Video processed.')
+    print.log({
+      message: ['Video processed.']
+    })
   }
   return collectResults(results)
 }
 
-export const collectResults = (results: VideoProcessingResult[]) => {
-  const success = results.filter((r) => r.status === 'success')
-  const unchanged = results.filter((r) => r.status === 'unchanged')
+export const collectResults = (
+  results: VideoProcessingResult[]
+): {
+  success: VideoProcessingSuccessResult[]
+  unchanged: VideoProcessingUnchangedResult[]
+  errors: VideoProcessingErrorResult[]
+} => {
+  const success = results.filter(
+    (r): r is { status: 'success'; manifest: VideoManifest } => r.status === 'success'
+  )
+  const unchanged = results.filter(
+    (r): r is { status: 'unchanged'; manifest: VideoManifest } => r.status === 'unchanged'
+  )
   const errors = results.filter((r) => r.status === 'error')
 
   return {
@@ -291,5 +336,5 @@ export const collectResults = (results: VideoProcessingResult[]) => {
 
 export const isSuccessfulResult = (
   result: VideoProcessingResult
-): result is { status: 'success' | 'unchanged'; manifest: VideoManifest } =>
+): result is VideoProcessingSuccessResult | VideoProcessingUnchangedResult =>
   result.status === 'success' || result.status === 'unchanged'

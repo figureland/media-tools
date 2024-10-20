@@ -5,7 +5,8 @@ export const videoManifestSchema = z.object({
   sources: z.array(
     z.object({
       src: z.string(),
-      type: z.string()
+      type: z.string(),
+      size: z.number()
     })
   ),
   poster: z.string(),
@@ -13,7 +14,8 @@ export const videoManifestSchema = z.object({
   height: z.number(),
   duration: z.number(),
   size: z.number(),
-  hash: z.string()
+  hash: z.string(),
+  fps: z.number()
 })
 
 export type VideoManifest = z.infer<typeof videoManifestSchema>

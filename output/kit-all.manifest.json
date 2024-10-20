@@ -1,0 +1,22 @@
+{
+  "id": "kit-all",
+  "hash": "87107b8ac3a7da7b8becfeb2f64cc43e",
+  "sources": [
+    {
+      "src": "//kit-all.87107b8a.mp4",
+      "type": "video/mp4",
+      "size": 260141
+    },
+    {
+      "src": "//kit-all.87107b8a.webm",
+      "type": "video/webm",
+      "size": 221462
+    }
+  ],
+  "poster": "/../output/kit-all_poster.87107b8a.jpg",
+  "width": 1920,
+  "height": 1080,
+  "duration": 8.064,
+  "fps": 24,
+  "size": 1947918
+}

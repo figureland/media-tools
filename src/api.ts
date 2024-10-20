@@ -3,6 +3,7 @@ import { ZodError } from 'zod'
 import { join } from 'path'
 import type { VideoManifest } from './schema'
 import { videoManifestSchema } from '.'
+import { print } from './log'
 
 const { parse } = JSON
 
@@ -25,9 +26,9 @@ export const getVideoManifest = async (
     return manifest
   } catch (error) {
     if (error instanceof ZodError) {
-      console.error('Invalid manifest data:', error.errors)
+      print.error({ message: ['Invalid manifest data:'] })
     } else {
-      console.error('Could not find or parse manifest file:', `${id}.manifest.json`)
+      print.error({ message: ['Could not find or parse manifest file:', `${id}.manifest.json`] })
     }
     return null
   }
