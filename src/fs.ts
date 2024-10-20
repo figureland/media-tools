@@ -33,3 +33,8 @@ export const fileExists = async (
   }
   return null
 }
+
+export const fileSize = async (path: string): Promise<number> => {
+  const s = await stat(path)
+  return s.size
+}

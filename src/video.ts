@@ -1,11 +1,11 @@
 import { $ } from 'bun'
-import { mkdir, stat, access } from 'fs/promises'
+import { mkdir, access } from 'fs/promises'
 import { parse, join, basename, relative } from 'path'
 import type { VideoManifest } from './schema'
 import { generateManifest } from './manifest'
 import { getFileHash } from './hash'
 import { getVideoManifest } from './api'
-import { fileExists, getFilesInDirectory, isDirectory } from './fs'
+import { fileExists, fileSize, getFilesInDirectory, isDirectory } from './fs'
 
 export const getVideoMetadata = async (inputFile: string) => {
   const width =
@@ -14,7 +14,7 @@ export const getVideoMetadata = async (inputFile: string) => {
     await $`ffprobe -v error -select_streams v:0 -show_entries stream=height -of csv=p=0 ${inputFile}`.text()
   const duration =
     await $`ffprobe -v error -show_entries format=duration -of csv=p=0 ${inputFile}`.text()
-  const size = (await stat(inputFile)).size
+  const size = await fileSize(inputFile)
 
   return {
     width: parseInt(width),
@@ -94,16 +94,17 @@ type VideoProcessingResult =
 export const processVideo = async ({
   outputFolder,
   file,
-  baseDir,
+  baseDir = '/',
   overwrite = false,
   loglevel = 'info'
 }: {
   outputFolder: string
   file: string
-  baseDir: string
+  baseDir?: string
   overwrite?: boolean
   loglevel?: FFMpegLogLevel
 }): Promise<VideoProcessingResult> => {
+  const startTime = performance.now()
   try {
     const { name: inputFileBase, dir: inputFileDir } = parse(file)
 
@@ -164,9 +165,18 @@ export const processVideo = async ({
       poster: `/${relative('public', posterPath)}`,
       ...metadata
     })
+    const endTime = performance.now()
+    const elapsedTime = ((endTime - startTime) / 1000).toFixed(2)
 
-    console.log(`Finished processing ${filename}`)
+    console.log(`Finished processing ${filename} (${elapsedTime}s)`)
     console.log(`  > ${manifestPath}`)
+    for (const source of manifest.sources) {
+      const filePath = join(targetDir, basename(source.src))
+      const size = await fileSize(filePath)
+      const sizeInMB = (size / (1024 * 1024)).toFixed(2)
+      const percentReduction = ((1 - size / metadata.size) * 100).toFixed(0)
+      console.log(`    > ${source.type} (${sizeInMB}mb, ${percentReduction}% smaller)`)
+    }
     return {
       status: 'success',
       manifest
@@ -190,10 +200,12 @@ export const isFFmpegInstalled = async (): Promise<boolean> => {
 export const processVideos = async ({
   input,
   outputFolder,
+  baseDir = '/',
   loglevel = 'info'
 }: {
   input: string
   outputFolder: string
+  baseDir?: string
   loglevel?: FFMpegLogLevel
 }) => {
   try {
@@ -231,7 +243,7 @@ export const processVideos = async ({
       const result = await processVideo({
         outputFolder,
         file,
-        baseDir: '/converted/',
+        baseDir,
         overwrite: true,
         loglevel
       })
@@ -251,7 +263,7 @@ export const processVideos = async ({
     const result = await processVideo({
       outputFolder,
       file: input,
-      baseDir: '/converted/',
+      baseDir: '/converted',
       overwrite: true,
       loglevel: 'info'
     })

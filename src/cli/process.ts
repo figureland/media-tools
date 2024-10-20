@@ -7,20 +7,24 @@ import { parseArgs } from 'util'
 const { values } = parseArgs({
   options: {
     src: { type: 'string' },
-    output: { type: 'string' }
+    output: { type: 'string' },
+    baseDir: { type: 'string' }
   },
   allowPositionals: true
 })
 
 if (!values.src || !values.output) {
-  console.error(`Usage: ${name} --src <input_directory> [--output <output_directory>]`)
+  console.error(
+    `Usage: ${name} --src <input_directory> [--output <output_directory>] [--baseDir <base_directory>]`
+  )
   process.exit(1)
 }
 
 const input = values.src
 const outputFolder = values.output
+const baseDir = values.baseDir
 
-processVideos({ input, outputFolder, loglevel: 'quiet' })
+processVideos({ input, outputFolder, baseDir, loglevel: 'quiet' })
   .then((videos) => {
     if (videos.success.length > 0) {
       console.log(`> Generated ${videos.success.length} videos`)
