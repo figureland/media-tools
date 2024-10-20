@@ -1,4 +1,16 @@
 #
+## v0.0.21
+
+[compare changes](https://github.com/figureland/media-tools/compare/v0.0.20...v0.0.21)
+
+### 🏡 Chore
+
+- Update docs and cli feedback ([a92ec39](https://github.com/figureland/media-tools/commit/a92ec39))
+
+### ❤️ Contributors
+
+- Toby Milner-Gulland <toby@figure.land>
+
 ## v0.0.20
 
 [compare changes](https://github.com/figureland/media-tools/compare/v0.0.19...v0.0.20)
