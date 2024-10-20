@@ -1,4 +1,16 @@
 #
+## v0.0.3
+
+[compare changes](https://github.com/figureland/media-tools/compare/v0.0.2...v0.0.3)
+
+### 🏡 Chore
+
+- Updated bin script name ([f4174c8](https://github.com/figureland/media-tools/commit/f4174c8))
+
+### ❤️ Contributors
+
+- Toby Milner-Gulland <toby@figure.land>
+
 ## v0.0.2
 
 [compare changes](https://github.com/figureland/media-tools/compare/v0.0.1...v0.0.2)
