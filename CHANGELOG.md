@@ -1,4 +1,16 @@
 #
+## v0.0.4
+
+[compare changes](https://github.com/figureland/media-tools/compare/v0.0.3...v0.0.4)
+
+### 🚀 Enhancements
+
+- Added ffmpeg check ([7a4b0ea](https://github.com/figureland/media-tools/commit/7a4b0ea))
+
+### ❤️ Contributors
+
+- Toby Milner-Gulland <toby@figure.land>
+
 ## v0.0.3
 
 [compare changes](https://github.com/figureland/media-tools/compare/v0.0.2...v0.0.3)
