@@ -166,8 +166,7 @@ export const processVideo = async ({
     })
 
     console.log(`Finished processing ${filename}`)
-    console.log(`Output files and manifest are in ${outputFolder}`)
-
+    console.log(`  > ${manifestPath}`)
     return {
       status: 'success',
       manifest
