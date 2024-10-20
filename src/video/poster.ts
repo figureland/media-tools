@@ -6,20 +6,21 @@ export const generatePosterImage = async ({
   outputFolder,
   filename,
   overwrite = false,
-  extension = 'jpg',
   loglevel = 'info'
 }: {
   inputFile: string
   outputFolder: string
   filename: string
   timestamp?: number
-  extension?: 'jpg' | 'png'
   overwrite?: boolean
   loglevel?: FFMpegLogLevel
 }) => {
-  const posterFilename = `${filename}.${extension}`
+  const posterFilename = `${filename}.webp`
   const posterPath = `${outputFolder}/${posterFilename}`
   const overwriteFlag = overwrite ? '-y' : ''
-  await $`ffmpeg ${overwriteFlag} -loglevel ${loglevel} -i ${inputFile} -vf "select=eq(n\\,0)" -vframes 1 -frames:v 1 ${posterPath} `
+
+  // Generate WebP poster directly
+  await $`ffmpeg ${overwriteFlag} -loglevel ${loglevel} -i ${inputFile} -vf "select=eq(n\\,0)" -vframes 1 -frames:v 1 ${posterPath}`
+
   return posterFilename
 }

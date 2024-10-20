@@ -10,7 +10,7 @@ export const generateThumbnailStrip = async ({
   inputFile,
   outputFolder,
   filename,
-  maxHeight = 60,
+  maxHeight = 100,
   overwrite = false,
   loglevel = 'info'
 }: {
@@ -22,7 +22,7 @@ export const generateThumbnailStrip = async ({
   loglevel?: FFMpegLogLevel
 }): Promise<VideoManifest['thumbnails']> => {
   const tempFolder = join(outputFolder, 'temp_thumbnails')
-  const stripFilename = `${filename}_strip.jpg`
+  const stripFilename = `${filename}_strip.webp`
   const stripPath = join(outputFolder, stripFilename)
   const overwriteFlag = overwrite ? '-y' : ''
 
@@ -85,7 +85,7 @@ export const generateThumbnailStrip = async ({
           top: 0
         }))
       )
-      .jpeg({ quality: 80 })
+      .webp({ quality: 90 })
       .toFile(stripPath)
 
     // Clean up temporary files

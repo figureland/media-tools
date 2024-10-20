@@ -10,3 +10,5 @@ cli
 *.local
 
 *.tsbuildinfo
+output
+video
