@@ -107,7 +107,7 @@ export const processVideo = async ({
   try {
     const { name: inputFileBase, dir: inputFileDir } = parse(file)
 
-    const inputFile = await fileExists(inputFileDir, inputFileBase, ['.mp4', '.mov'])
+    const inputFile = await fileExists(inputFileDir, inputFileBase, ['mp4', 'mov'])
 
     if (!inputFile) {
       throw new Error(`No .mp4 or .mov file found for ${inputFileBase}`)
@@ -217,7 +217,7 @@ export const processVideos = async ({
   const isDir = await isDirectory(input)
 
   if (isDir) {
-    const videoFiles = await getFilesInDirectory(input, ['.mp4', '.mov'])
+    const videoFiles = await getFilesInDirectory(input, ['mp4', 'mov'])
 
     if (videoFiles.length === 0) {
       console.log(
@@ -242,8 +242,8 @@ export const processVideos = async ({
 
     console.log('All videos processed.')
   } else {
-    // Process single file
-    if (!['.mp4', '.mov'].includes(extname(input).toLowerCase())) {
+    const singleFileExists = await fileExists(input, basename(input), ['mp4', 'mov'])
+    if (!singleFileExists) {
       console.error(`Error: The file "${input}" is not a supported video format (.mp4 or .mov).`)
       process.exit(1)
     }
