@@ -7,6 +7,8 @@
 
 This tool were born out of frustration with the baffling complexity of managing videos on the web. Third-party video platforms like [Mux](https://mux.com/) or [Cloudinary](https://cloudinary.com/) are great, but they feel like overkill for a lot of smaller projects, and introduce another service, another login and another place where payment details need to be left.
 
+This library is still quite complicated, so there is still a way to go to make it as user friendly as possible, but the core structure is minimal – essentially a much nicer experience of what you can do with `ffmpeg` and bash scripts.
+
 ## Getting started
 
 This project depends on [bun](https://bun.sh/) and [ffmpeg](https://www.ffmpeg.org/). It's intended for local use, not for CI or servers although that may change with a more mature version in the future.
