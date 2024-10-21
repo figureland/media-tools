@@ -76,9 +76,11 @@ const main = async () => {
       loglevel: 'quiet'
     })
 
+    print.space()
+
     if (videos.success.length > 0) {
       print.log({
-        message: [`> ${videos.success.length} videos optimised`],
+        message: [`⬤ ${videos.success.length} videos optimised`, ''],
         color: 'lime green'
       })
       print.log({
@@ -87,13 +89,13 @@ const main = async () => {
     }
     if (videos.unchanged.length > 0) {
       print.log({
-        message: [`> ${videos.unchanged.length} existing videos unchanged`],
+        message: [`⬤ ${videos.unchanged.length} existing videos unchanged`, ''],
         color: 'orange'
       })
     }
     if (videos.errors.length > 0) {
       print.log({
-        message: [`> ${videos.errors.length} videos failed to process`],
+        message: [`⬤ ${videos.errors.length} videos failed to process`, ''],
         color: 'orange'
       })
     }
