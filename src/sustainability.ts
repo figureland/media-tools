@@ -90,7 +90,7 @@ export const logCO2eReport = (videos: VideoProcessingSuccessResult[]) => {
     color: 'lime green'
   })
   print.log({
-    message: [`Estimated ${formatCO2e(deltaCO2e)}/download`],
+    message: [`Estimated ${formatCO2e(deltaCO2e)}/download`, ''],
     color: 'lime green'
   })
   print.log({

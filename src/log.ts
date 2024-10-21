@@ -36,7 +36,8 @@ const getColorCode = (color: string): string => {
 
 export const print = {
   error,
-  log
+  log,
+  space: () => log({ message: [' '] })
 }
 
 export const logo = `
