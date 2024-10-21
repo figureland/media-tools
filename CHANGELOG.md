@@ -1,4 +1,16 @@
 #
+## v0.0.27
+
+[compare changes](https://github.com/figureland/media-tools/compare/v0.0.26...v0.0.27)
+
+### 🏡 Chore
+
+- Added spacers to cli ([70c09aa](https://github.com/figureland/media-tools/commit/70c09aa))
+
+### ❤️ Contributors
+
+- Toby Milner-Gulland <toby@figure.land>
+
 ## v0.0.26
 
 [compare changes](https://github.com/figureland/media-tools/compare/v0.0.25...v0.0.26)
