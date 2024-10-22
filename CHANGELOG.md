@@ -1,4 +1,20 @@
 #
+## v0.0.29
+
+[compare changes](https://github.com/figureland/media-tools/compare/v0.0.28...v0.0.29)
+
+### 🩹 Fixes
+
+- Issue with min/max thumbnails and video duration ([7e60354](https://github.com/figureland/media-tools/commit/7e60354))
+
+### 🏡 Chore
+
+- Added spacers to cli ([bd8ce5a](https://github.com/figureland/media-tools/commit/bd8ce5a))
+
+### ❤️ Contributors
+
+- Toby Milner-Gulland <toby@figure.land>
+
 ## v0.0.28
 
 [compare changes](https://github.com/figureland/media-tools/compare/v0.0.27...v0.0.28)
