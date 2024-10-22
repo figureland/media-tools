@@ -1,4 +1,4 @@
-import { $ } from 'bun'
+import { $, which } from 'bun'
 import sharp from 'sharp'
 import { join } from 'path'
 import { unlink, mkdir, rm, readdir } from 'fs/promises'
@@ -31,28 +31,56 @@ export const generateThumbnailStrip = async ({
   const overwriteFlag = overwrite ? '-y' : ''
 
   try {
+    // Ensure ffmpeg and ffprobe are available
+    await which('ffmpeg')
+    await which('ffprobe')
+
+    // Create temp folder if it doesn't exist
+    await mkdir(tempFolder, { recursive: true })
+
+    // Get precise video duration using ffprobe
+    const { stdout: durationOutput } =
+      await $`ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 ${inputFile}`
+    const duration = parseFloat(durationOutput.toString().trim())
+
     // Get video metadata
-    const { width, height, duration } = await getVideoMetadata(inputFile)
+    const { width, height } = await getVideoMetadata(inputFile)
     const aspectRatio = width / height
 
-    // Calculate appropriate interval
-    const interval = Math.max(1, Math.ceil(duration / maxThumbnails))
+    // Calculate appropriate interval and number of thumbnails
+    const interval = Math.max(
+      0.1,
+      duration / Math.max(minThumbnails, Math.min(maxThumbnails, duration))
+    )
     const actualThumbnails = Math.min(
       maxThumbnails,
       Math.max(minThumbnails, Math.floor(duration / interval))
     )
 
-    // Create temporary folder for individual thumbnails
-    await mkdir(tempFolder, { recursive: true })
-
     // Generate timestamps for snapshots
-    const intervalTimestamps = Array.from({ length: actualThumbnails }, (_, i) => i * interval)
+    const intervalTimestamps = Array.from({ length: actualThumbnails }, (_, i) =>
+      Math.min(i * interval, duration - 0.1)
+    )
+
+    // Prepare the select filter
+    const selectFilter = intervalTimestamps.map((t) => `eq(n,${Math.floor(t * 30)})`).join('+')
 
     // Extract frames at calculated timestamps
-    for (let i = 0; i < intervalTimestamps.length; i++) {
-      const time = intervalTimestamps[i]
-      await $`ffmpeg ${overwriteFlag} -loglevel ${loglevel} -ss ${time} -i ${inputFile} -vframes 1 ${tempFolder}/thumb${i.toString().padStart(4, '0')}.jpg`
-    }
+    const ffmpegCommand = [
+      'ffmpeg',
+      overwriteFlag,
+      '-loglevel',
+      loglevel,
+      '-i',
+      inputFile,
+      '-vf',
+      `select='${selectFilter}',scale=${maxHeight}:-1`,
+      '-vsync',
+      '0',
+      `${tempFolder}/thumb%04d.jpg`
+    ].filter(Boolean)
+
+    await $`${ffmpegCommand}`
 
     // Get list of generated thumbnails in correct order
     const thumbnailFiles = await readdir(tempFolder)
