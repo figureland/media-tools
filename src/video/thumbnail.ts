@@ -13,7 +13,7 @@ export const generateThumbnailStrip = async ({
   maxHeight = 100,
   overwrite = false,
   loglevel = 'info',
-  minThumbnails = 16,
+  minThumbnails = 20,
   maxThumbnails = 30
 }: {
   inputFile: string
@@ -39,12 +39,9 @@ export const generateThumbnailStrip = async ({
     await mkdir(tempFolder, { recursive: true })
 
     // Get precise video duration using ffprobe
-    const { stdout: durationOutput } =
-      await $`ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 ${inputFile}`
-    const duration = parseFloat(durationOutput.toString().trim())
 
     // Get video metadata
-    const { width, height } = await getVideoMetadata(inputFile)
+    const { width, height, duration } = await getVideoMetadata(inputFile)
     const aspectRatio = width / height
 
     // Calculate appropriate interval and number of thumbnails

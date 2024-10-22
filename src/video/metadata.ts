@@ -10,9 +10,9 @@ export const getVideoFPS = async (inputFile: string) => {
 }
 
 export const getVideoDuration = async (inputFile: string): Promise<number> => {
-  const duration =
-    await $`ffprobe -v error -show_entries format=duration -of csv=p=0 ${inputFile}`.text()
-  return parseFloat(duration)
+  const durationOutput =
+    await $`ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 ${inputFile}`.text()
+  return parseFloat(durationOutput.trim())
 }
 
 export const getVideoMetadata = async (
