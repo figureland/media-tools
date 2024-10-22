@@ -1,4 +1,16 @@
 #
+## v0.0.28
+
+[compare changes](https://github.com/figureland/media-tools/compare/v0.0.27...v0.0.28)
+
+### 🚀 Enhancements
+
+- Added min and max thumbnails options to thumbnail strip generator ([6317080](https://github.com/figureland/media-tools/commit/6317080))
+
+### ❤️ Contributors
+
+- Toby Milner-Gulland <toby@figure.land>
+
 ## v0.0.27
 
 [compare changes](https://github.com/figureland/media-tools/compare/v0.0.26...v0.0.27)
