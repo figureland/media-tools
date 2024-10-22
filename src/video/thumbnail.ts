@@ -12,7 +12,9 @@ export const generateThumbnailStrip = async ({
   filename,
   maxHeight = 100,
   overwrite = false,
-  loglevel = 'info'
+  loglevel = 'info',
+  minThumbnails = 16,
+  maxThumbnails = 30
 }: {
   inputFile: string
   outputFolder: string
@@ -20,6 +22,8 @@ export const generateThumbnailStrip = async ({
   maxHeight?: number
   overwrite?: boolean
   loglevel?: FFMpegLogLevel
+  minThumbnails?: number
+  maxThumbnails?: number
 }): Promise<VideoManifest['thumbnails']> => {
   const tempFolder = join(outputFolder, 'temp_thumbnails')
   const stripFilename = `${filename}_strip.webp`
@@ -32,9 +36,11 @@ export const generateThumbnailStrip = async ({
     const aspectRatio = width / height
 
     // Calculate appropriate interval
-    const maxThumbnails = 30
     const interval = Math.max(1, Math.ceil(duration / maxThumbnails))
-    const actualThumbnails = Math.min(maxThumbnails, Math.floor(duration / interval))
+    const actualThumbnails = Math.min(
+      maxThumbnails,
+      Math.max(minThumbnails, Math.floor(duration / interval))
+    )
 
     // Create temporary folder for individual thumbnails
     await mkdir(tempFolder, { recursive: true })
