@@ -13,7 +13,8 @@ export const generateThumbnailStrip = async ({
   maxHeight = 100,
   overwrite = false,
   loglevel = 'info',
-  intervals = 30
+  intervals = 30,
+  borderWidth = 0
 }: {
   inputFile: string
   outputFolder: string
@@ -22,6 +23,7 @@ export const generateThumbnailStrip = async ({
   overwrite?: boolean
   loglevel?: FFMpegLogLevel
   intervals?: number
+  borderWidth?: number
 }): Promise<VideoManifest['thumbnails']> => {
   const tempFolder = join(outputFolder, 'temp_thumbnails')
   const stripFilename = `${filename}_strip.webp`
@@ -59,9 +61,8 @@ export const generateThumbnailStrip = async ({
       '-vsync',
       '0',
       `${tempFolder}/thumb%04d.jpg`
-    ].filter(Boolean)
+    ]
 
-    console.log(ffmpegCommand)
     await $`${ffmpegCommand}`
 
     // Get list of generated thumbnails in correct order
@@ -79,7 +80,20 @@ export const generateThumbnailStrip = async ({
     const thumbnailWidth = Math.round(maxHeight * aspectRatio)
     const resizedThumbnails = await Promise.all(
       thumbnailList.map(async (thumb) =>
-        sharp(thumb).resize({ height: maxHeight, width: thumbnailWidth, fit: 'fill' }).toBuffer()
+        sharp(thumb)
+          .resize({
+            height: maxHeight - 2 * borderWidth,
+            width: thumbnailWidth - 2 * borderWidth,
+            fit: 'fill'
+          })
+          .extend({
+            top: borderWidth,
+            bottom: borderWidth,
+            left: borderWidth,
+            right: borderWidth,
+            background: { r: 0, g: 0, b: 0, alpha: 1 }
+          })
+          .toBuffer()
       )
     )
 
@@ -90,8 +104,8 @@ export const generateThumbnailStrip = async ({
       create: {
         width: stripWidth,
         height: stripHeight,
-        channels: 3,
-        background: { r: 0, g: 0, b: 0 }
+        channels: 4,
+        background: { r: 0, g: 0, b: 0, alpha: 0 }
       }
     })
       .composite(
