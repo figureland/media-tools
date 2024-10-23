@@ -1,4 +1,4 @@
-import { $, which } from 'bun'
+import { $ } from 'bun'
 import sharp from 'sharp'
 import { join } from 'path'
 import { unlink, mkdir, rm, readdir } from 'fs/promises'
@@ -13,8 +13,7 @@ export const generateThumbnailStrip = async ({
   maxHeight = 100,
   overwrite = false,
   loglevel = 'info',
-  minThumbnails = 20,
-  maxThumbnails = 30
+  intervals = 30
 }: {
   inputFile: string
   outputFolder: string
@@ -22,8 +21,7 @@ export const generateThumbnailStrip = async ({
   maxHeight?: number
   overwrite?: boolean
   loglevel?: FFMpegLogLevel
-  minThumbnails?: number
-  maxThumbnails?: number
+  intervals?: number
 }): Promise<VideoManifest['thumbnails']> => {
   const tempFolder = join(outputFolder, 'temp_thumbnails')
   const stripFilename = `${filename}_strip.webp`
@@ -31,36 +29,22 @@ export const generateThumbnailStrip = async ({
   const overwriteFlag = overwrite ? '-y' : ''
 
   try {
-    // Ensure ffmpeg and ffprobe are available
-    await which('ffmpeg')
-    await which('ffprobe')
-
     // Create temp folder if it doesn't exist
     await mkdir(tempFolder, { recursive: true })
 
-    // Get precise video duration using ffprobe
-
     // Get video metadata
-    const { width, height, duration } = await getVideoMetadata(inputFile)
+    const { width, height, duration, fps } = await getVideoMetadata(inputFile)
     const aspectRatio = width / height
 
-    // Calculate appropriate interval and number of thumbnails
-    const interval = Math.max(
-      0.1,
-      duration / Math.max(minThumbnails, Math.min(maxThumbnails, duration))
-    )
-    const actualThumbnails = Math.min(
-      maxThumbnails,
-      Math.max(minThumbnails, Math.floor(duration / interval))
-    )
+    const interval = duration / intervals
 
     // Generate timestamps for snapshots
-    const intervalTimestamps = Array.from({ length: actualThumbnails }, (_, i) =>
+    const intervalTimestamps = Array.from({ length: intervals }, (_, i) =>
       Math.min(i * interval, duration - 0.1)
     )
 
     // Prepare the select filter
-    const selectFilter = intervalTimestamps.map((t) => `eq(n,${Math.floor(t * 30)})`).join('+')
+    const selectFilter = intervalTimestamps.map((t) => `eq(n,${Math.floor(t * fps)})`).join('+')
 
     // Extract frames at calculated timestamps
     const ffmpegCommand = [
@@ -77,6 +61,7 @@ export const generateThumbnailStrip = async ({
       `${tempFolder}/thumb%04d.jpg`
     ].filter(Boolean)
 
+    console.log(ffmpegCommand)
     await $`${ffmpegCommand}`
 
     // Get list of generated thumbnails in correct order
@@ -125,7 +110,7 @@ export const generateThumbnailStrip = async ({
 
     return {
       src: stripFilename,
-      intervals: actualThumbnails,
+      intervals,
       width: stripWidth,
       height: stripHeight
     }

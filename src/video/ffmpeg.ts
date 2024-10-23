@@ -1,4 +1,4 @@
-import { $ } from 'bun'
+import { $, which } from 'bun'
 import type { VideoManifest } from '../schema'
 import { fileSize } from '../fs'
 import type { FFMpegLogLevel } from '../types'
@@ -44,7 +44,10 @@ export const generateVideo = async ({
 
 export const isFFmpegInstalled = async (): Promise<boolean> => {
   try {
+    which('ffmpeg')
+    which('ffprobe')
     await $`ffmpeg -version`.quiet()
+
     return true
   } catch (error) {
     return false
