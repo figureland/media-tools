@@ -1,4 +1,17 @@
 #
+## v0.0.30
+
+[compare changes](https://github.com/figureland/media-tools/compare/v0.0.29...v0.0.30)
+
+### 🩹 Fixes
+
+- Bug with thumbnail strip ([b3af8bd](https://github.com/figureland/media-tools/commit/b3af8bd))
+- Bug with thumbnail strip ([b5bb2f0](https://github.com/figureland/media-tools/commit/b5bb2f0))
+
+### ❤️ Contributors
+
+- Toby Milner-Gulland <toby@figure.land>
+
 ## v0.0.29
 
 [compare changes](https://github.com/figureland/media-tools/compare/v0.0.28...v0.0.29)
